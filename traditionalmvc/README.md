@@ -64,5 +64,8 @@ In realta' non ha senso passare controller diversi, sia perche:
 
 sia perche' anche passando un mock, non si riesce ad attivare l'evento `mouseReleasEvent` che permetterebbe di verificare che il mock riceva `addOne`
 
-In ogni caso si puo' passare il controller tramite `setController`: non e' comunque possibile passarlo nel costruttore, perche' per construire il controller
+In ogni caso si puo' passare il controller tramite `setController`: non e' in generale  possibile passarlo nel costruttore, perche' per construire il controller serve la vista e per costruire la vista serve il controller.
+Quindi
+1. la vista crea il suo controller
+2. il controller passa se stesso alla vista tramite setController
 
