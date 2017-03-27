@@ -1,5 +1,5 @@
-name "traditionalmvc"
-description "Traditional MVC example"
+name "mmvc"
+description "Application model example"
 authors "o3o"
 copyright "Copyright © 2017, o3o"
 license "Boost"
@@ -8,15 +8,16 @@ targetType "executable"
 /*sourcePaths "."*/
 /*dependency "unit-threaded" version="~>0.7.8"*/
 
-configuration "o" {
-   versions "observer"
+configuration "base" {
+   versions "base"
 }
-configuration "del" {
-   versions "del"
+configuration "di" {
+   versions "withdi"
+   dependency "endovena" version="~>0.3.3"
 }
-// dub -csig
-configuration "sig" {
-   versions "sig"
+configuration "di2" {
+   versions "withdi2"
+   dependency "endovena" version="~>0.3.3"
 }
 
 configuration "unittest" {

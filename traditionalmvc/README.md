@@ -15,38 +15,47 @@ See [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01_
 ### Model
 - Quando si imposta `value` i listeners devono ricevere la notifica solo se il valore cambia
 -
+
 ### Controller
-- `addOne` deve incrementare `value` del modell
+- `addOne` deve incrementare `value` del model
 
 ### View
-Questa e' la parte delicata.
-In PF si verificava che quando la vista generava un evento il presenter lo reinstradasse al modello
+La vista non è testabile, nel senso che non si può testare che la vista esegua qualche azione a fronte di un click.
+
+
+## Contronto con PF
+In PF si verifica che quando la vista genera un evento il presenter lo reinstradi al modello
 
 ```
-| M              | P | V                     | User           |
-|                |   |                       | <--- click --- |
-|                |   | <~~~ addRqs event ~~~ |                |
-| <---- incr --- |   |                       |                |
++-------+      +-------+           +-------+
+|   M   |      |   P   |           |   V   |
++-------+      +-------+           +-------+            o
+    |              |                   |<--- click --- -|-
+    |              |<--*addRqs event --|               / \
+    |<---- incr ---|                   |
 
 ```
-Al presenter si passavano i mock del modello e vista:
+
+Al presenter si passa i mock del modello e della vista
 Il test e'
 > Quando si genera l'evento addRqs il presente deve incrementare il modello
 
-Per testare che il presenter chiamasse addOne, l'evento `addRequested` era generato dal mock.
+Per testare che il presenter chiami `addOne`, l'evento `addRequested` è generato dal mock.
 **NON** si testa che l'evento si generi sul click dell'operatore, perché la vista non è testabile.
 
-Qui la vista chiama direttamente il metodo `addOne` del controller in quanto lo conosce.
+In MVC la vista chiama direttamente il metodo `addOne` del controller in quanto lo conosce.
 
 ```
-| M              | C | V               | User           |
-|                |   |                 | <--- click --- |
-|                |   | <--- addOne --- |                |
-| <---- incr --- |   |                 |                |
++-------+      +-------+     +-------+
+|   M   |      |   C   |     |   V   |
++-------+      +-------+     +-------+            o
+    |              |             |<--- click --- -|-
+    |              |<-- addOne --|               / \
+    |<---- incr ---|             |
 ```
 
 Sembrerebbe non testabile, in realta' e si riformula il test come:
-> Quando si chiama addOne il controller deve incrementare il modello
+> Quando si chiama `addOne` il controller deve incrementare il modello
 
 e' testabile nello stesso modo di PF: la vista era e resta ancora esclusa.
 

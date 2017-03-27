@@ -14,6 +14,12 @@ else {
          Model m  = new Model();
          View v = new View(m);
       }
+      version (sig) {
+         writeln("SIGNAL");
+         import traditionalmvc.withsignal;
+         Model m  = new Model();
+         View v = new View(m);
+      }
       writeln("e: event");
       writeln("q: exit");
       char cmd;

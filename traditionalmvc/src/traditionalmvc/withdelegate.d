@@ -42,17 +42,14 @@ class Model {
       }
    }
 }
-/+
 @("notifyListeners should call notify") unittest {
    int calls = 0;
    Model m = new Model();
    m.register({++calls;});
 
    m.value = 42;
-   calls.shouldEqual(42);
+   calls.shouldEqual(1);
 }
-+/
-
 class Controller {
    private Model m;
    this(Model m) {
@@ -63,16 +60,14 @@ class Controller {
       m.value = m.value + 1;
    }
 }
-//@("addOne should call value")
-/+unittest {
+@("addOne should call value")
+unittest {
    Model m = new Model();
    Controller c = new Controller(m);
    m.value.shouldEqual(0);
    c.addOne();
-   m.value.shouldEqual(0);
+   m.value.shouldEqual(1);
 }
-+/
-
 
 class View  {
    private Model m;

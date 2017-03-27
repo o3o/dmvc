@@ -1,5 +1,4 @@
 module traditionalmvc.observer;
-
 version(unittest) { import unit_threaded; } else { enum ShouldFail; }
 
 import std.stdio;
@@ -84,7 +83,6 @@ unittest {
    c.addOne();
    m.value.shouldEqual(1);
 }
-
 
 class View : IObserver {
    private Model m;
