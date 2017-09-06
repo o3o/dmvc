@@ -3,11 +3,20 @@ version(unittest) { import unit_threaded; } else { enum ShouldFail; }
 
 import std.stdio;
 
+/**
+ * Interfacci implementata da tutti gli osservatori
+ */
 interface IObserver {
    // `update` is better
    void notify();
 }
 
+/**
+ * Il modello e' il soggetto e deve mantenere una lista degli osservatori
+ *
+ * Deve quindi esporre due metodi che permettono agli osservatori di registrarsi (e deregistrarsi)
+ *
+ */
 class Model {
    private IObserver[] listeners;
    // `attach` is better. See http://www.dofactory.com/net/observer-design-pattern
@@ -34,11 +43,18 @@ class Model {
 
    private int _value;
    @property int value() { return _value; }
+   /**
+    * Quando il valore cambia, notifica tutti gli osservatori
+    */
    @property void value(int value) {
       if (_value != value) {
          _value = value;
          notifyListeners();
       }
+   }
+
+   void inc() {
+      this.value = this.value + 1;
    }
 
    private void notifyListeners() {
@@ -47,6 +63,7 @@ class Model {
       }
    }
 }
+
 unittest {
    //notifyListeners should call notify
    class Observer: IObserver {
@@ -66,6 +83,10 @@ unittest {
    assert(o.calls == 1);
 }
 
+/**
+ * Il controller contiene solo un riferimento al modello
+ * Puo' avere o no un riferimento alla vista
+ */
 class Controller {
    private Model m;
    this(Model m) {
@@ -73,9 +94,10 @@ class Controller {
    }
 
    void addOne() {
-      m.value = m.value + 1;
+      m.inc();
    }
 }
+
 @("addOne should call value")
 unittest {
    Model m = new Model();
@@ -91,6 +113,31 @@ class View : IObserver {
       this.m = m;
       ctrl = new Controller(m);
       m.register(this);
+   }
+
+   /**
+     It should be private.
+     Public just to simulate event into main
+    */
+   void mouseReleasEvent() {
+      ctrl.addOne();
+   }
+
+   void notify() {
+      writefln("notify: set value to %s", m.value);
+   }
+}
+
+class View2 : IObserver {
+   // il modello serve alla vista per usare direttamente i dati senza doverli passare nell'evento
+   private Model m;
+   private Controller ctrl;
+   this(Model m, Controller ctrl) {
+      assert(ctrl !is null);
+      this.ctrl = ctrl;
+
+      assert(m !is null);
+      this.m = m;
    }
 
    /**

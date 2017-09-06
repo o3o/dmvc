@@ -1,4 +1,5 @@
-module traditionalmvc.observer;
+module traditionalmvc.multiobserver;
+
 version(unittest) { import unit_threaded; } else { enum ShouldFail; }
 
 import std.stdio;
@@ -47,6 +48,7 @@ class Model {
       }
    }
 }
+
 unittest {
    //notifyListeners should call notify
    class Observer: IObserver {
@@ -76,6 +78,7 @@ class Controller {
       m.value = m.value + 1;
    }
 }
+
 @("addOne should call value")
 unittest {
    Model m = new Model();
