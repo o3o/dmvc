@@ -1,5 +1,4 @@
 # Traditional MVC
-
 See [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01_from_smartui_to_traditional_mvc/03_traditional_mvc.html)
 
 > To summarize the scope of each role in Traditional MVC:
@@ -8,13 +7,16 @@ See [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01_
 - View: visually renders the Model to the User (Presentation logic).
 - Controller: mediates User actions on the GUI to drive modifications on the Model (Application logic).
 
-
 > Depending on the specifics of the application, a Controller may or may not need a reference to the View, but it certainly needs the Model to apply changes on.
+
+## Struttura
+Loscopo è simulare il comportamento di una vista in cui premendo il pulsante `add` un valore e' incrementato e visualizzato sulla vista stessa
+
+L'esempio rappresenta
 
 ## Test
 ### Model
 - Quando si imposta `value` i listeners devono ricevere la notifica solo se il valore cambia
--
 
 ### Controller
 - `addOne` deve incrementare `value` del model
@@ -36,11 +38,11 @@ In PF si verifica che quando la vista genera un evento il presenter lo reinstrad
 
 ```
 
-Al presenter si passa i mock del modello e della vista
-Il test e'
-> Quando si genera l'evento addRqs il presente deve incrementare il modello
+Al presenter si passa i mock del modello e della vistaL
+Il test è:
+> Quando si genera l'evento `addRqs` il presenter deve incrementare il modello
 
-Per testare che il presenter chiami `addOne`, l'evento `addRequested` è generato dal mock.
+Per testare che il presenter chiami `addOne`, il mock della vista genera l'evento `addRqs` e si verifica che il mock del modello riceva `incr`.
 **NON** si testa che l'evento si generi sul click dell'operatore, perché la vista non è testabile.
 
 In MVC la vista chiama direttamente il metodo `addOne` del controller in quanto lo conosce.
@@ -57,7 +59,7 @@ In MVC la vista chiama direttamente il metodo `addOne` del controller in quanto 
 Sembrerebbe non testabile, in realta' e si riformula il test come:
 > Quando si chiama `addOne` il controller deve incrementare il modello
 
-e' testabile nello stesso modo di PF: la vista era e resta ancora esclusa.
+è testabile nello stesso modo di PF: la vista era e resta ancora esclusa.
 
 
 ## Note
