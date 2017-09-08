@@ -1,4 +1,4 @@
-module mmvc.enginedi2;
+module mmvc_exp.enginedi2;
 version(unittest) { import unit_threaded; } else { enum ShouldFail; }
 
 /**

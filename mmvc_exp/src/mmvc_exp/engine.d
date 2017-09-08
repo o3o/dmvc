@@ -1,14 +1,12 @@
-module mmvc.enginedi;
+module mmvc_exp.engine;
+
 version(unittest) { import unit_threaded; } else { enum ShouldFail; }
 
 import std.stdio;
-// non si possono usare std.signal perche' non implementabili nelle interfacce
-alias Handler = void delegate();
+import std.signals;
 interface IEngine {
    @property int rpm();
    @property void rpm(int value);
-   bool isOverRpmLimit();
-   void connect(Handler);
 }
 
 // Domain model
@@ -18,38 +16,23 @@ class Engine : IEngine {
    @property void rpm(int value) {
       if (_rpm != value) {
          _rpm = value;
-         writeln("emit");
-         emit();
+         rpmChanged.emit();
       }
    }
 
    bool isOverRpmLimit() {
       return _rpm > 800;
    }
-
-   private Handler h;
-   void connect(Handler h) {
-      writeln("conn");
-      this.h = h;
-   }
-
-   private void emit() {
-      if (h) {
-         h();
-      } else {
-         writeln("null");
-      }
-   }
+   mixin Signal rpmChanged;
 }
 
 // Application model
 class DialEngine : IEngine {
-   private IEngine e;
-   this(IEngine e) {
+   private Engine e;
+   this(Engine e) {
       assert(e !is null);
       this.e = e;
-      this.e.connect(&notify);
-      writeln("Dial ctro");
+      this.e.rpmChanged.connect(&notify);
    }
 
    private void notify() {
@@ -58,36 +41,20 @@ class DialEngine : IEngine {
       } else {
          _color = "green";
       }
-      emit();
+      rpmChanged.emit();
    }
 
    @property int rpm() { return e.rpm; }
-   @property void rpm(int value) { e.rpm = value; }
+   @property void rpm(int value) {
+      e.rpm = value;
+   }
 
    private string _color;
    @property string color() { return _color; }
 
-   bool isOverRpmLimit() {
-      return e.isOverRpmLimit;
-   }
-
-   private Handler h;
-   void connect(Handler h) {
-      this.h = h;
-   }
-
-   private void emit() {
-      if (h) {
-         writeln("emit AM");
-         h();
-      }
-   }
+   mixin Signal rpmChanged;
 }
 
-/**
-  Passando al Controller una interfaccia invece che una classe concreta,
-  lo si rende testabile
-  */
 class Controller {
    private IEngine m;
    this(IEngine m) {
@@ -103,13 +70,11 @@ class Controller {
 class Dial {
    private DialEngine m;
    private Controller ctrl;
-   this(DialEngine m, Controller ctrl) {
-      assert(ctrl !is null);
-      this.ctrl = ctrl;
-
-      assert(m !is null);
+   this(DialEngine m) {
       this.m = m;
-      this.m.connect(&update);
+
+      ctrl = new Controller(this.m);
+      this.m.rpmChanged.connect(&update);
    }
 
    void accelerateEvent() {

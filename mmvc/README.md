@@ -16,3 +16,7 @@ See [Chap. 2.1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/
   I|--- notify -->|                        |
    |              |------ notify --------->|
 ```
+
+quindi
+- *Application model* Modello associato al controller
+- *Domain model* Modello associato a Application model.

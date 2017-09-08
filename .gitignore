@@ -1,2 +1,4 @@
 traditionalmvc/bin/
 mmvc/.dub/
+.dub
+bin

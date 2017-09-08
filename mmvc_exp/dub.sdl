@@ -1,0 +1,33 @@
+name "mmvc"
+description "Application model example"
+authors "o3o"
+copyright "Copyright © 2017, o3o"
+license "Boost"
+targetPath "bin"
+targetType "executable"
+/*sourcePaths "."*/
+/*dependency "unit-threaded" version="~>0.7.8"*/
+configuration "e0" {
+   versions "e0"
+}
+
+configuration "ebase" {
+   versions "ebase"
+}
+configuration "edi" {
+   versions "edi"
+   dependency "endovena" version="~>0.3.3"
+}
+configuration "edi2" {
+   versions "edi2"
+   dependency "endovena" version="~>0.3.3"
+}
+
+configuration "unittest" {
+   mainSourceFile "bin/ut.d"
+   targetType "executable"
+   excludedSourceFiles "src/app.d"
+
+   dependency "unit-threaded" version="~>0.7.8"
+   preBuildCommands "dub run unit-threaded -c gen_ut_main -- -f bin/ut.d"
+}
