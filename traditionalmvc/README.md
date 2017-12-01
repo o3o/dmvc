@@ -10,7 +10,7 @@ See [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01_
 > Depending on the specifics of the application, a Controller may or may not need a reference to the View, but it certainly needs the Model to apply changes on.
 
 ## Struttura
-Loscopo è simulare il comportamento di una vista in cui premendo il pulsante `add` un valore e' incrementato e visualizzato sulla vista stessa
+Lo scopo è simulare il comportamento di una vista in cui premendo il pulsante `add` un valore e' incrementato e visualizzato sulla vista stessa
 
 L'esempio rappresenta
 
@@ -38,7 +38,7 @@ In PF si verifica che quando la vista genera un evento il presenter lo reinstrad
 
 ```
 
-Al presenter si passa i mock del modello e della vistaL
+Al presenter si passa i mock del modello e della vista.
 Il test è:
 > Quando si genera l'evento `addRqs` il presenter deve incrementare il modello
 
@@ -69,14 +69,16 @@ Il controller è creato all'interno della vista:
  m.register(this);
 ```
 sembra contrario alla DI, perche in questo modo non si possono passare contrller diversi (es. mock).
-In realta' non ha senso passare controller diversi, sia perche:
+In realta' non ha senso passare controller diversi, sia perche':
 
 > Controllers are associated to Views in a strong one-to-one mutual dependency, and can be described as the "business logic" of the View.
 
 sia perche' anche passando un mock, non si riesce ad attivare l'evento `mouseReleasEvent` che permetterebbe di verificare che il mock riceva `addOne`
 
-In ogni caso si puo' passare il controller tramite `setController`: non e' in generale  possibile passarlo nel costruttore, perche' per construire il controller serve la vista e per costruire la vista serve il controller.
+In ogni caso si puo' passare il controller tramite `setController`: non e' in generale  possibile passarlo nel costruttore, perche' per construire il controller serve la vista 
+e per costruire la vista serve il controller.
 Quindi
 1. la vista crea il suo controller
 2. il controller passa se stesso alla vista tramite setController
 
+Come detto sopra non e' necessario che il controller conosca la vista, quindi si puo' semplicemente costruire il controller e passarlo alla vista nel costrutore
