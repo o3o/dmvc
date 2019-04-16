@@ -1,50 +1,28 @@
-import std.stdio;
 version(unittest) {}
 else {
    void main(string[] args) {
-      version (base) {
-         import mmvc.engine;
-         auto domainM = new Engine();
-         auto appM = new DialEngine(domainM);
-         auto view = new Dial(appM);
+      version (e0) {
+         import mmvc.engine0;
+         auto m = new Engine();
+         auto view = new Dial(m);
       }
-      version (withdi) {
-         import mmvc.enginedi;
-         import endovena;
-         Container container = new Container;
-         // Domain mmodel
-         container.register!(IEngine, Engine, Singleton)();
-         // application model
-         container.register!(DialEngine, Singleton);
-
-         container.register!(Controller, Singleton);
-         // view
-         container.register!(Dial, Singleton);
-
-         auto view = container.get!Dial;
+      version (e1) {
+         import mmvc.engine1;
+         auto m = new Engine();
+         auto view = new Dial(m);
       }
-      version (withdi2) {
-         import mmvc.enginedi2;
-         import endovena;
-         Container container = new Container;
-         // Domain mmodel
-         container.register!(Engine, Singleton)();
-         // application model
-         container.register!(DialEngine, Singleton)();
-
-         container.register!(Controller, Singleton)();
-         // view
-         container.register!(Dial, Singleton)();
-
-         auto view = container.get!Dial;
+      version (e2) {
+         import mmvc.engine2;
+         auto m = new Engine();
+         auto view = new Dial(m);
       }
-      writeln("e: event");
-      writeln("q: exit");
-
-      char cmd;
-      do {
-         readf(" %s", &cmd);
-         if (cmd == 'e') view.accelerateEvent();
-      } while (cmd != 'q');
+      version (e3) {
+         import mmvc.engine3;
+         auto e = new Engine();
+         auto m = new DialEngine(e);
+         auto view = new Dial(m);
+      }
+      m.rpm = 100;
+      m.rpm = 8100;
    }
 }

@@ -10,9 +10,54 @@ Vedi [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01
 > Depending on the specifics of the application, a Controller may or may not need a reference to the View, but it certainly needs the Model to apply changes on.
 
 ## Struttura
+<<<<<<< HEAD
 Lo scopo è simulare il comportamento di una vista in cui premendo il pulsante `add` un valore è incrementato e visualizzato sulla vista stessa
+=======
+Lo scopo è simulare il comportamento di una vista in cui premendo il pulsante `add` un valore e' incrementato e visualizzato sulla vista stessa.
+Si confrontano diverse implementazioni:
+- con il pattern Observer
+- con i delegate
+- con signal/slot
 
-L'esempio rappresenta
+## Observer
+Il modello è il soggetto che notifica a tutti gli osservatori il verificarsi di un evento (in questo caso la modifica di `value`).
+Gli osservatori devono registrarsi nel modello (con il metodo `register`) e quindi devono implementare una interfaccia comune `IObserver`.
+
+Sono implementate due modalità di creazione: nella prima la vista riceve nel costruttore il modello crea il controller e si registra nel modello stesso. Nella seconda queste operazioni sono fatte al di fuori della vista  e al
+construttore della vista è passato solo il controller e il modello
+
+| conosce ? | M   | C   | V   |
+| ---       | --- | --- | --- |
+| M         | xxx | NO  | NO  |
+| C         | SI  | xxx | (1) |
+| V         | SI  | SI  | xxx |
+
+(1) Il controller può o meno conoscere la vista.
+
+Nel modo 1, il controller è creato all'interno della vista:
+```
+ ctrl = new Controller(m);
+ m.register(this);
+```
+sembra contrario alla DI, perchè in questo modo non si possono passare controller diversi (es. mock).
+In realtà non ha senso passare controller diversi, sia perchè (pag.29 UMVC):
+
+> Controllers are associated to Views in a strong one-to-one mutual dependency, and can be described as the "business logic" of the View.
+
+sia perche' anche passando un mock, non si riesce ad attivare l'evento `mouseReleasEvent` che permetterebbe di verificare che il mock riceva `addOne`
+
+In ogni caso si puo' passare il controller tramite `setController`: non e' in generale  possibile passarlo nel costruttore, perchè per construire il controller serve la vista e per costruire la vista serve il controller.
+Quindi:
+1. la vista crea il suo controller
+2. il controller passa se stesso alla vista tramite setController
+
+## Signal/slot
+Si usa l'implementazione nativa di signal/slot: basta aggiungere un `mixin Signal` al soggetto e questo ha un evento `emit` e connect
+
+Anche qui la costruzione è eseguita nella vista: la vista riceve il modelllo nel costruttore crea il controller e registra le funzioni slot nel segnale del modello (`connect`). Si può anche fare esternamente come in view2
+
+>>>>>>> be1adc119d1eaa626243c2687253784ca278037c
+
 
 ## Test
 ### Model
@@ -23,7 +68,6 @@ L'esempio rappresenta
 
 ### View
 La vista non è testabile, nel senso che non si può testare che la vista esegua qualche azione a fronte di un click.
-
 
 ## Contronto con PF
 In PF si verifica che quando la vista genera un evento il presenter lo reinstradi al modello
@@ -61,7 +105,12 @@ Sembrerebbe non testabile, in realta' e si riformula il test come:
 
 è testabile nello stesso modo di PF: la vista era e resta ancora esclusa.
 
+## Compilazione
+- observer (`dub -co`)
+- delegate (`dub -cdel`)
+- signal (`dub -csig`)
 
+<<<<<<< HEAD
 ## Note
 Il controller è creato all'interno della vista:
 ```
@@ -79,5 +128,7 @@ In ogni caso si puo' passare il controller alla vista tramite `setController`: n
 Quindi:
 1. la vista crea il suo controller
 2. il controller passa se stesso alla vista tramite setController
+=======
+>>>>>>> be1adc119d1eaa626243c2687253784ca278037c
 
 Come detto sopra non è necessario che il controller conosca la vista, quindi si puo' semplicemente costruire il controller e passarlo alla vista nel costruttore

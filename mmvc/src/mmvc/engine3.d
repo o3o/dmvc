@@ -1,16 +1,14 @@
-module mmvc.engine;
-
-version(unittest) { import unit_threaded; } else { enum ShouldFail; }
+module mmvc.engine3;
 
 import std.stdio;
 import std.signals;
-interface IEngine {
-   @property int rpm();
-   @property void rpm(int value);
+enum Qt {
+   green,
+   red
 }
 
 // Domain model
-class Engine : IEngine {
+class Engine  {
    private int _rpm;
    @property int rpm() { return _rpm; }
    @property void rpm(int value) {
@@ -21,13 +19,13 @@ class Engine : IEngine {
    }
 
    bool isOverRpmLimit() {
-      return _rpm > 800;
+      return _rpm > 8000;
    }
    mixin Signal rpmChanged;
 }
 
 // Application model
-class DialEngine : IEngine {
+class DialEngine {
    private Engine e;
    this(Engine e) {
       assert(e !is null);
@@ -37,9 +35,9 @@ class DialEngine : IEngine {
 
    private void notify() {
       if (e.isOverRpmLimit) {
-         _color = "red";
+         _color = Qt.red;
       } else {
-         _color = "green";
+         _color = Qt.green;
       }
       rpmChanged.emit();
    }
@@ -49,21 +47,19 @@ class DialEngine : IEngine {
       e.rpm = value;
    }
 
-   private string _color;
-   @property string color() { return _color; }
+   private Qt _color;
+   @property Qt color() { return _color; }
 
    mixin Signal rpmChanged;
 }
 
+// il ctl deve ricevere Engine o DialEngine?
 class Controller {
-   private IEngine m;
-   this(IEngine m) {
+   private DialEngine m;
+   this(DialEngine m) {
       this.m = m;
    }
 
-   void accelerate() {
-      m.rpm = m.rpm + 100;
-   }
 }
 
 // view
@@ -77,11 +73,7 @@ class Dial {
       this.m.rpmChanged.connect(&update);
    }
 
-   void accelerateEvent() {
-      ctrl.accelerate();
-   }
-
    void update() {
-      writefln("[DIAL] notify: set value to %s color %s", m.rpm, m.color);
+      writefln("[DIAL 3] notify: set value to %s color %s", m.rpm, m.color);
    }
 }

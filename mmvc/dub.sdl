@@ -7,24 +7,15 @@ targetPath "bin"
 targetType "executable"
 /*sourcePaths "."*/
 /*dependency "unit-threaded" version="~>0.7.8"*/
-
-configuration "base" {
-   versions "base"
+configuration "e0" {
+   versions "e0"
 }
-configuration "di" {
-   versions "withdi"
-   dependency "endovena" version="~>0.3.3"
+configuration "e1" {
+   versions "e1"
 }
-configuration "di2" {
-   versions "withdi2"
-   dependency "endovena" version="~>0.3.3"
+configuration "e2" {
+   versions "e2"
 }
-
-configuration "unittest" {
-   mainSourceFile "bin/ut.d"
-   targetType "executable"
-   excludedSourceFiles "src/app.d"
-
-   dependency "unit-threaded" version="~>0.7.8"
-   preBuildCommands "dub run unit-threaded -c gen_ut_main -- -f bin/ut.d"
+configuration "e3" {
+   versions "e3"
 }

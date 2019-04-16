@@ -11,18 +11,12 @@ targetType "executable"
 configuration "o" {
    versions "observer"
 }
-configuration "o2" {
-   versions "observer2"
-}
 configuration "del" {
    versions "del"
 }
 // dub -csig
 configuration "sig" {
    versions "sig"
-}
-configuration "sig2" {
-   versions "sig2"
 }
 
 configuration "unittest" {

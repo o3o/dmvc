@@ -12,6 +12,14 @@ class Model {
          modelChanged.emit();
       }
    }
+   void inc() {
+      this.value = this.value + 1;
+   }
+
+   /**
+    * A questo segnale possono connettersi funzioni del tipo
+    * void f()
+    */
    mixin Signal modelChanged;
 }
 
@@ -22,7 +30,7 @@ class Controller {
    }
 
    void addOne() {
-      m.value = m.value + 1;
+      m.inc();
    }
 }
 
@@ -35,10 +43,28 @@ class View {
       m.modelChanged.connect(&notify);
    }
 
-   /**
-     It should be private.
-     Public just to simulate event into main
-    */
+   void mouseReleasEvent() {
+      ctrl.addOne();
+   }
+
+   void notify() {
+      writefln("[SIGNAL] notify: set value to %s", m.value);
+   }
+}
+
+class View2 {
+   private Model m;
+   private Controller ctrl;
+   this(Model m, Controller ctrl) {
+      assert(m !is null);
+      this.m = m;
+
+      assert(ctrl !is null);
+      this.ctrl = ctrl;
+
+      m.modelChanged.connect(&notify);
+   }
+
    void mouseReleasEvent() {
       ctrl.addOne();
    }

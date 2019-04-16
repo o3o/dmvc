@@ -1,85 +1,54 @@
-module mmvc.enginedi3;
+module mmvc_exp.enginedi;
 version(unittest) { import unit_threaded; } else { enum ShouldFail; }
 
 import std.stdio;
 // non si possono usare std.signal perche' non implementabili nelle interfacce
-class Signal {
-   alias handler = void delegate();
-   private handler[] listeners;
-   // `attach` is better. See http://www.dofactory.com/net/observer-design-pattern
-   void register(handler v) {
-      if (v) {
-         listeners ~= v;
-      }
-   }
-
-   // `detach` is better
-   void unregister(void delegate() v) {
-      size_t i = -1;
-      foreach (j, h; listeners) {
-         if (h is v) {
-            i = j;
-            break;
-         }
-      }
-      if (i > -1) {
-         listeners = listeners[0..i] ~ listeners[i+1..$];
-      }
-   }
-
-   void emit() {
-      foreach (l; listeners) {
-         l();
-      }
-   }
-   void connect(Handler);
-}
-
-class Signal2 {
-   import std.signals;
-   void emit() {
-      rpmChanged.emit();
-   }
-   mixin Signal rpmChanged;
-}
-
+alias Handler = void delegate();
 interface IEngine {
    @property int rpm();
    @property void rpm(int value);
    bool isOverRpmLimit();
+   void connect(Handler);
 }
 
 // Domain model
 class Engine : IEngine {
-   private Signal s;
-   this(Signal s) {
-      assert(s !is null);
-      this.s = s;
-   }
-
    private int _rpm;
    @property int rpm() { return _rpm; }
    @property void rpm(int value) {
       if (_rpm != value) {
          _rpm = value;
          writeln("emit");
-         s.emit();
+         emit();
       }
    }
 
    bool isOverRpmLimit() {
       return _rpm > 800;
    }
+
+   private Handler h;
+   void connect(Handler h) {
+      writeln("conn");
+      this.h = h;
+   }
+
+   private void emit() {
+      if (h) {
+         h();
+      } else {
+         writeln("null");
+      }
+   }
 }
 
 // Application model
 class DialEngine : IEngine {
    private IEngine e;
-   this(IEngine e, Signal s) {
+   this(IEngine e) {
       assert(e !is null);
       this.e = e;
-
-      s.connect(&notify);
+      this.e.connect(&notify);
       writeln("Dial ctro");
    }
 
@@ -98,6 +67,21 @@ class DialEngine : IEngine {
    private string _color;
    @property string color() { return _color; }
 
+   bool isOverRpmLimit() {
+      return e.isOverRpmLimit;
+   }
+
+   private Handler h;
+   void connect(Handler h) {
+      this.h = h;
+   }
+
+   private void emit() {
+      if (h) {
+         writeln("emit AM");
+         h();
+      }
+   }
 }
 
 /**
