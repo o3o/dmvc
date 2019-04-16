@@ -1,5 +1,5 @@
 # Traditional MVC
-See [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01_from_smartui_to_traditional_mvc/03_traditional_mvc.html)
+Vedi [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01_from_smartui_to_traditional_mvc/03_traditional_mvc.html)
 
 > To summarize the scope of each role in Traditional MVC:
 
@@ -10,7 +10,7 @@ See [Chap 1.3](https://stefanoborini.gitbooks.io/modelviewcontroller/content/01_
 > Depending on the specifics of the application, a Controller may or may not need a reference to the View, but it certainly needs the Model to apply changes on.
 
 ## Struttura
-Lo scopo è simulare il comportamento di una vista in cui premendo il pulsante `add` un valore e' incrementato e visualizzato sulla vista stessa
+Lo scopo è simulare il comportamento di una vista in cui premendo il pulsante `add` un valore è incrementato e visualizzato sulla vista stessa
 
 L'esempio rappresenta
 
@@ -68,17 +68,16 @@ Il controller è creato all'interno della vista:
  ctrl = new Controller(m);
  m.register(this);
 ```
-sembra contrario alla DI, perche in questo modo non si possono passare contrller diversi (es. mock).
-In realta' non ha senso passare controller diversi, sia perche':
+sembra contrario alla DI, perché in questo modo non si possono passare controller diversi (es. mock) alla vista.
+In realta' non ha senso passare controller diversi, sia perché:
 
 > Controllers are associated to Views in a strong one-to-one mutual dependency, and can be described as the "business logic" of the View.
 
-sia perche' anche passando un mock, non si riesce ad attivare l'evento `mouseReleasEvent` che permetterebbe di verificare che il mock riceva `addOne`
+sia perché anche passando un controller mock, non si riesce ad attivare l'evento `mouseReleasEvent` che permetterebbe di verificare che il controller mock riceva `addOne`
 
-In ogni caso si puo' passare il controller tramite `setController`: non e' in generale  possibile passarlo nel costruttore, perche' per construire il controller serve la vista 
-e per costruire la vista serve il controller.
-Quindi
+In ogni caso si puo' passare il controller alla vista tramite `setController`: non è in generale  possibile passarlo nel costruttore della vista, perché per construire il controller serve la vista e per costruire la vista serve il controller.
+Quindi:
 1. la vista crea il suo controller
 2. il controller passa se stesso alla vista tramite setController
 
-Come detto sopra non e' necessario che il controller conosca la vista, quindi si puo' semplicemente costruire il controller e passarlo alla vista nel costrutore
+Come detto sopra non è necessario che il controller conosca la vista, quindi si puo' semplicemente costruire il controller e passarlo alla vista nel costruttore
