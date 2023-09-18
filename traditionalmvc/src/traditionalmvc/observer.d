@@ -4,7 +4,7 @@ version(unittest) { import unit_threaded; } else { enum ShouldFail; }
 import std.stdio;
 
 /**
- * Interfacci implementata da tutti gli osservatori
+ * Interfaccia implementata da tutti gli osservatori
  */
 interface IObserver {
    // `update` is better
